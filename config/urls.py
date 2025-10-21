@@ -3,8 +3,14 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
+from . import healthcheck
 
 urlpatterns = [
+    # ------------------------------
+    # Healthcheck endpoint
+    # ------------------------------
+    path("health/", healthcheck.healthcheck, name="healthcheck"),
+    
     # ------------------------------
     # Homepage (public site root)
     # ------------------------------
