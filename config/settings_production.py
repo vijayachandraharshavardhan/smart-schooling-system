@@ -12,10 +12,10 @@ DEBUG = False
 ALLOWED_HOSTS = [
     '*.railway.app',  # Railway domains
     '*.onrender.com', # Render domains
+    '*.herokuapp.com', # Heroku domains
     'localhost',
     '127.0.0.1',
     '0.0.0.0',
-    '.herokuapp.com',  # Heroku domains
     '.vercel.app',     # Vercel domains
     '.netlify.app',    # Netlify domains
 ]
@@ -87,17 +87,22 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-# CSRF Trusted Origins for Render - Comprehensive configuration
+# CSRF Trusted Origins for Heroku - Comprehensive configuration
 CSRF_TRUSTED_ORIGINS = [
-    'https://smart-schooling-system.onrender.com',
-    'https://smart-schooling-system.onrender.com/',
-    'https://*.onrender.com',
-    'https://*.onrender.com/',
+    'https://smart-schooling-system.herokuapp.com',
+    'https://smart-schooling-system.herokuapp.com/',
+    'https://*.herokuapp.com',
+    'https://*.herokuapp.com/',
     # Keep Railway origins as fallback
     'https://smart-schooling-system-production.up.railway.app',
     'https://smart-schooling-system-production.up.railway.app/',
     'https://*.railway.app',
     'https://*.railway.app/',
+    # Keep Render origins as fallback
+    'https://smart-schooling-system.onrender.com',
+    'https://smart-schooling-system.onrender.com/',
+    'https://*.onrender.com',
+    'https://*.onrender.com/',
 ]
 
 # -----------------------------------
