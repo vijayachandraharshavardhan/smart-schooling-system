@@ -76,6 +76,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://smart-schooling-system-production.up.railway.app',  # HTTP fallback
     'http://*.railway.app',  # HTTP fallback
     'https://smart-schooling-system-production.railway.app',  # Alternative format
+    'http://smart-schooling-system-production.railway.app',  # Alternative HTTP
 ]
 
 # -----------------------------------
