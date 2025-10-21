@@ -69,14 +69,16 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-# CSRF Trusted Origins for Railway
+# CSRF Trusted Origins for Railway - Comprehensive list
 CSRF_TRUSTED_ORIGINS = [
     'https://smart-schooling-system-production.up.railway.app',
     'https://*.railway.app',
-    'http://smart-schooling-system-production.up.railway.app',  # HTTP fallback
-    'http://*.railway.app',  # HTTP fallback
-    'https://smart-schooling-system-production.railway.app',  # Alternative format
-    'http://smart-schooling-system-production.railway.app',  # Alternative HTTP
+    'http://smart-schooling-system-production.up.railway.app',
+    'http://*.railway.app',
+    'https://smart-schooling-system-production.railway.app',
+    'http://smart-schooling-system-production.railway.app',
+    'https://railway.app',
+    'http://railway.app',
 ]
 
 # -----------------------------------
