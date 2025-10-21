@@ -11,6 +11,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'your-super-secret-key-here-change-thi
 DEBUG = False
 ALLOWED_HOSTS = [
     '*.railway.app',  # Railway domains
+    '*.onrender.com', # Render domains
     'localhost',
     '127.0.0.1',
     '0.0.0.0',
@@ -86,8 +87,13 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-# CSRF Trusted Origins for Railway - Final working configuration
+# CSRF Trusted Origins for Render - Comprehensive configuration
 CSRF_TRUSTED_ORIGINS = [
+    'https://smart-schooling-system.onrender.com',
+    'https://smart-schooling-system.onrender.com/',
+    'https://*.onrender.com',
+    'https://*.onrender.com/',
+    # Keep Railway origins as fallback
     'https://smart-schooling-system-production.up.railway.app',
     'https://smart-schooling-system-production.up.railway.app/',
     'https://*.railway.app',
