@@ -96,6 +96,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://smart-schooling-system-production.railway.app',
     'https://railway.app',
     'http://railway.app',
+    'https://smart-schooling-system-production.up.railway.app/',
+    'http://smart-schooling-system-production.up.railway.app/',
 ]
 
 # -----------------------------------
