@@ -122,3 +122,18 @@ LOGGING = {
 
 # Create logs directory if it doesn't exist
 os.makedirs(BASE_DIR / 'logs', exist_ok=True)
+
+# Temporary database debugging - remove after fixing
+import logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+logger.info("=== DATABASE CONFIGURATION DEBUG ===")
+logger.info(f"PGHOST: {os.environ.get('PGHOST', 'NOT SET')}")
+logger.info(f"PGPORT: {os.environ.get('PGPORT', 'NOT SET')}")
+logger.info(f"PGDATABASE: {os.environ.get('PGDATABASE', 'NOT SET')}")
+logger.info(f"PGUSER: {os.environ.get('PGUSER', 'NOT SET')}")
+logger.info(f"PGPASSWORD: {'SET' if os.environ.get('PGPASSWORD') else 'NOT SET'}")
+logger.info(f"DATABASE_URL: {os.environ.get('DATABASE_URL', 'NOT SET')}")
+logger.info(f"Final DATABASES config: {DATABASES['default']}")
+logger.info("=== END DATABASE DEBUG ===")
