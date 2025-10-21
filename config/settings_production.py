@@ -123,6 +123,9 @@ LOGGING = {
 # Create logs directory if it doesn't exist
 os.makedirs(BASE_DIR / 'logs', exist_ok=True)
 
+# Set default password for auto-created superuser
+os.environ.setdefault('DJANGO_SUPERUSER_PASSWORD', 'admin123')
+
 # Temporary database debugging - remove after fixing
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
