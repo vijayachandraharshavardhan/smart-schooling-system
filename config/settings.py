@@ -87,6 +87,18 @@ TEMPLATES = [
         },
     },
 ]
+# Allow your deployed domain to make POST requests
+CSRF_TRUSTED_ORIGINS = [
+    "https://smart-schooling-system-production.up.railway.app",
+]
+
+# Allow your deployed domain to access your app
+ALLOWED_HOSTS = [
+    "smart-schooling-system-production.up.railway.app",
+    "127.0.0.1",
+    "localhost",
+]
+
 
 # -----------------------------------
 # DATABASE (SQLite)
