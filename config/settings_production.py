@@ -29,8 +29,11 @@ DATABASES = {
         'NAME': os.environ.get('PGDATABASE', 'railway'),
         'USER': os.environ.get('PGUSER', 'postgres'),
         'PASSWORD': os.environ.get('PGPASSWORD', ''),
-        'HOST': os.environ.get('PGHOST', 'localhost'),
+        'HOST': os.environ.get('PGHOST', 'containers-us-west-1.railway.app'),  # Railway default
         'PORT': os.environ.get('PGPORT', '5432'),
+        'OPTIONS': {
+            'sslmode': 'require',  # Railway requires SSL
+        },
     }
 }
 
@@ -38,6 +41,20 @@ DATABASES = {
 if 'DATABASE_URL' in os.environ:
     import dj_database_url
     DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'])
+else:
+    # Alternative Railway database URL construction
+    if all(key in os.environ for key in ['PGHOST', 'PGPORT', 'PGDATABASE', 'PGUSER', 'PGPASSWORD']):
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['PGDATABASE'],
+            'USER': os.environ['PGUSER'],
+            'PASSWORD': os.environ['PGPASSWORD'],
+            'HOST': os.environ['PGHOST'],
+            'PORT': os.environ['PGPORT'],
+            'OPTIONS': {
+                'sslmode': 'require',
+            },
+        }
 
 # -----------------------------------
 # STATIC FILES (Production)
