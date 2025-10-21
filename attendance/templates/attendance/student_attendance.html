@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Attendance - {{ student.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3 class="text-center mb-4 fw-bold text-primary">
+    Attendance Record for {{ student.name }} ({{ student.roll_no }})
+  </h3>
+
+  <div class="table-responsive">
+    <table class="table table-bordered text-center align-middle shadow-sm">
+      <thead class="table-dark">
+        <tr>
+          <th>Date</th>
+          {% for subject in subjects %}
+            <th>{{ subject.name }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for dt, records in attendance_data.items %}
+        <tr>
+          <td>{{ dt }}</td>
+          {% for subject in subjects %}
+            <td>
+              {% if records|get_item:subject.name == "P" %}
+                ✅
+              {% elif records|get_item:subject.name == "A" %}
+                ❌
+              {% else %}
+                -
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+        {% empty %}
+        <tr><td colspan="{{ subjects|length|add:1 }}" class="text-muted">No attendance data yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Achievements{% endblock %}
+
+{% block extra_head %}
+<!-- Bootstrap Icons CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+    /* Heading */
+    .achievers-heading {
+        font-weight: 800;
+        margin-bottom: 50px;
+        text-align: center;
+        font-size: 2.8rem;
+        color: #0d6efd;
+    }
+
+    /* Gradient underline */
+    .achievers-heading::after {
+        content: '';
+        display: block;
+        width: 140px;
+        height: 5px;
+        margin: 12px auto 0;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #ff6600, #0d6efd);
+    }
+
+    /* Tabs customization */
+    .nav-tabs {
+        justify-content: center;
+        border-bottom: none;
+    }
+
+    .nav-tabs .nav-link {
+        font-weight: bold;
+        font-size: 1.3rem;
+        padding: 12px 35px;
+        border-radius: 50px;
+        margin: 0 10px;
+        color: #fff;
+        background-color: #6c757d;
+        transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #0d6efd;
+        transform: scale(1.1);
+    }
+
+    .nav-tabs .nav-link:hover {
+        transform: scale(1.05);
+    }
+
+    /* Cards */
+    .achievement-card {
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .achievement-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    .card-title {
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+
+    /* Modal image */
+    .modal-img {
+        width: 100%;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="achievers-heading">
+        <i class="bi bi-mortarboard-fill" style="color:#ffc107; margin-right:10px;"></i>
+        Our Achievers
+    </h1>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-4" id="achievementsTab" role="tablist">
+      <li class="nav-item">
+        <button class="nav-link active" id="professional-tab" data-bs-toggle="tab" data-bs-target="#professional" type="button" role="tab">Professional</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="sports-tab" data-bs-toggle="tab" data-bs-target="#sports" type="button" role="tab">Sports</button>
+      </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="achievementsTabContent">
+        <!-- Professional Achievements -->
+        <div class="tab-pane fade show active" id="professional" role="tabpanel">
+            <div class="row justify-content-center g-4">
+                {% for achievement in professional_achievements %}
+                <div class="col-md-4 col-lg-3">
+                    <div class="card achievement-card" data-bs-toggle="modal" data-bs-target="#modal{{ achievement.id }}">
+                        <img src="{{ achievement.image.url }}" class="card-img-top" alt="{{ achievement.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ achievement.title }}</h5>
+                            <p class="card-text text-truncate">{{ achievement.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modal{{ achievement.id }}" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ achievement.title }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body text-center">
+                        <img src="{{ achievement.image.url }}" class="modal-img mb-3" alt="{{ achievement.title }}">
+                        <p>{{ achievement.description }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sports Achievements -->
+        <div class="tab-pane fade" id="sports" role="tabpanel">
+            <div class="row justify-content-center g-4">
+                {% for achievement in sports_achievements %}
+                <div class="col-md-4 col-lg-3">
+                    <div class="card achievement-card" data-bs-toggle="modal" data-bs-target="#modal{{ achievement.id }}">
+                        <img src="{{ achievement.image.url }}" class="card-img-top" alt="{{ achievement.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ achievement.title }}</h5>
+                            <p class="card-text text-truncate">{{ achievement.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modal{{ achievement.id }}" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ achievement.title }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body text-center">
+                        <img src="{{ achievement.image.url }}" class="modal-img mb-3" alt="{{ achievement.title }}">
+                        <p>{{ achievement.description }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

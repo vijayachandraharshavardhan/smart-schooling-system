@@ -1,0 +1,192 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Announcements</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    color: #222;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  /* 🔶 Header */
+  .announcements-header {
+    text-align: center;
+    padding: 40px 15px 20px;
+  }
+
+  .announcements-header h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: #ff6600;
+    margin-bottom: 8px;
+  }
+
+  .announcements-header p {
+    color: #6c757d;
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .header-underline {
+    width: 65px;
+    height: 3px;
+    background: linear-gradient(90deg, #ff6600, #ff8533);
+    margin: 0 auto 25px;
+    border-radius: 3px;
+  }
+
+  /* 🔸 Announcement Cards */
+  .announcement-card {
+    background-color: #fffdf9;
+    border: 2.5px solid #ff6600;
+    border-radius: 14px;
+    padding: 28px 32px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    margin-bottom: 18px; /* spacing between cards */
+  }
+
+  .announcement-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(255, 102, 0, 0.25);
+    border-color: #ff8533;
+  }
+
+  .announcement-card h4 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: #e65100;
+    font-size: 1.35rem;
+    margin-bottom: 12px;
+  }
+
+  .announcement-card p {
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.65;
+    letter-spacing: 0.2px;
+  }
+
+  .announcement-meta {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 15px;
+    font-weight: 500;
+  }
+
+  .announcement-meta i {
+    color: #ff6600;
+    margin-right: 5px;
+  }
+
+  /* Center column */
+  .middle-column {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* ✅ Footer */
+  footer {
+    width: 100%;
+    background: linear-gradient(70deg, #ff6600, #ff8533);
+    color: #fff;
+    text-align: center;
+    padding: 14px 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-top: auto;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.3px;
+  }
+
+  footer p {
+    margin: 0;
+  }
+
+  footer a {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .announcement-card {
+      padding: 22px;
+    }
+
+    .middle-column {
+      max-width: 90%;
+    }
+
+    .announcements-header h2 {
+      font-size: 1.6rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <!-- Header -->
+  <section class="announcements-header">
+    <h2>📢 Announcements</h2>
+    <p>Stay informed with the latest school updates and notices</p>
+    <div class="header-underline"></div>
+  </section>
+
+  <!-- Announcements List -->
+  <div class="middle-column mb-5">
+    {% if announcements %}
+      {% for a in announcements %}
+        <div>
+          <div class="announcement-card">
+            <h4>{{ a.title }}</h4>
+            <p>{{ a.content }}</p>
+            <div class="announcement-meta text-end">
+              <i class="bi bi-calendar-event"></i>
+              {{ a.created_at|date:"M d, Y • h:i A" }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="text-center mt-5">
+        <p class="text-muted fs-5">No announcements available right now.</p>
+      </div>
+    {% endif %}
+  </div>
+</main>
+
+<!-- Footer -->
+<footer>
+  <p>© DEEPTI EM HIGH SCHOOL. All Rights Reserved.</p>
+  <p>Developed by <a href="#">B.V.C. Harsha Vardhan</a></p>
+</footer>
+
+</body>
+</html>

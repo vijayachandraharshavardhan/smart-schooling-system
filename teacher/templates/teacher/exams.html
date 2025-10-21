@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Teacher - Exams{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3 class="fw-bold text-primary mb-4">Schedule Exam</h3>
+
+  <!-- ✅ Popup success/error messages -->
+  {% if messages %}
+  <div>
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Exam form -->
+  <form method="POST" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Class & Section</label>
+      <select class="form-select" name="class_id" required>
+        <option value="">-- Select Class --</option>
+        {% for cls in classes %}
+          <option value="{{ cls.id }}">{{ cls.class_name }} - {{ cls.section }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Subject</label>
+      <select name="subject" class="form-select" required>
+        <option value="">-- Select Subject --</option>
+        {% for sub in subjects %}
+          <option value="{{ sub.id }}">{{ sub.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Exam Date</label>
+      <input type="date" name="exam_date" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Maximum Marks</label>
+      <input type="number" name="max_marks" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Syllabus</label>
+      <textarea name="syllabus" class="form-control" rows="3" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Add Exam</button>
+  </form>
+
+  <!-- ✅ Show recently added exams -->
+  {% if exams %}
+  <div class="mt-5">
+    <h4 class="text-secondary mb-3">Recent Exams</h4>
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Class</th>
+          <th>Subject</th>
+          <th>Date</th>
+          <th>Max Marks</th>
+          <th>Syllabus</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exam in exams %}
+        <tr>
+          <td>{{ exam.class_section.class_name }} - {{ exam.class_section.section }}</td>
+          <td>{{ exam.subject.name }}</td>
+          <td>{{ exam.exam_date }}</td>
+          <td>{{ exam.max_marks }}</td>
+          <td>{{ exam.syllabus }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

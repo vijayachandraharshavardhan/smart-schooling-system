@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Top Rankers{% endblock %}
+
+{% block content %}
+<div class="container mt-5 d-flex flex-column min-vh-100">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold display-6" style="color: #ff6600;">🧑‍🎓 TOP RANKERS</h2>
+    </div>
+
+    <div class="row justify-content-center flex-grow-1">
+        {% for student in ranks %}
+        <div class="col-sm-6 col-md-4 mb-4">
+            <div class="card card-hover p-4 text-center shadow-sm border-0">
+                {% if student.photo %}
+                    <img src="{{ student.photo.url }}" alt="{{ student.name }}" class="poster-img mb-3">
+                {% else %}
+                    <img src="{% static 'images/default_profile.png' %}" alt="{{ student.name }}" class="poster-img mb-3">
+                {% endif %}
+                <h5 class="fw-bold mt-2">{{ student.name }}</h5>
+                <p class="text-muted">Marks: {{ student.marks }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center text-muted">No rankers found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<style>
+.poster-img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    border-radius: 12px;
+    object-fit: contain;
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover animation */
+.card-hover:hover .poster-img {
+    transform: scale(1.03);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+</style>
+{% endblock %}

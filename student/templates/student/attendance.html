@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block title %}Student Attendance{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Student Attendance</h2>
+
+    <form method="post" class="mb-4 text-center">
+        {% csrf_token %}
+        <input type="text" name="roll_number" placeholder="Enter Roll Number" class="form-control d-inline-block" style="width:200px;">
+        <button type="submit" class="btn btn-primary ms-2">Show Attendance</button>
+    </form>
+
+    {% if student %}
+        <!-- Student Info Card -->
+        <div class="card mb-4 shadow-sm mx-auto" style="max-width: 500px; border-radius: 10px;">
+            <div class="card-body text-center">
+                <h3 class="card-title fw-bold">{{ student.name }}</h3>
+                <p class="mb-1"><strong>Roll No:</strong> {{ student.roll_number }}</p>
+                <p class="mb-2"><strong>Class:</strong> {{ student.student_class }} - {{ student.section }}</p>
+                <h5 class="fw-bold text-primary">Your Attendance: {{ attendance_percentage }}%</h5>
+            </div>
+        </div>
+
+        <!-- Attendance Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>DATE</th>
+                        {% for subject in subjects %}
+                            <th>{{ subject.name|upper }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dt in sorted_dates %}
+                        <tr>
+                            <td>{{ dt|date:"Y-m-d" }}</td>
+                            {% for subject in subjects %}
+                                {% with status=attendance_matrix|get_item:dt|get_item:subject.name %}
+                                    {% if status == "P" %}
+                                        <td class="bg-success text-white">&#10004;</td>
+                                    {% elif status == "A" %}
+                                        <td class="bg-danger text-white">&#10006;</td>
+                                    {% else %}
+                                        <td class="bg-secondary text-white">&#8211;</td>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary -->
+        <div class="mt-3 text-center">
+            <strong>Total Classes:</strong> {{ total_classes }} |
+            <strong>Present:</strong> {{ present_count }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
