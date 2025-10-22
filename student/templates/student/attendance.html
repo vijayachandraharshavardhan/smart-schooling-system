@@ -5,63 +5,223 @@
 {% block title %}Student Attendance{% endblock %}
 
 {% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        font-family: 'Poppins', sans-serif;
+        overflow-x: hidden;
+    }
+
+    .attendance-container {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 50, 0.2);
+        padding: 40px;
+        border-top: 6px solid #0d47a1;
+        animation: fadeInCard 0.8s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        max-width: 100%;
+    }
+
+    @keyframes fadeInCard {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .attendance-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 100, 0.25);
+    }
+
+    h2.page-title {
+        font-weight: 800;
+        color: #0d47a1;
+        text-shadow: 0 2px 5px rgba(0, 0, 60, 0.15);
+    }
+
+    /* 🎯 Input + Button Section */
+    .attendance-form input {
+        max-width: 250px;
+        border: 2px solid #0d47a1;
+        border-radius: 8px;
+        padding: 10px;
+        transition: 0.3s;
+    }
+
+    .attendance-form input:focus {
+        border-color: #1565c0;
+        box-shadow: 0 0 8px rgba(13, 71, 161, 0.4);
+    }
+
+    .btn-search {
+        background: linear-gradient(45deg, #0d47a1, #1565c0);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 18px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .btn-search:hover {
+        transform: scale(1.05);
+        background: linear-gradient(45deg, #1565c0, #0d47a1);
+        box-shadow: 0 6px 14px rgba(13, 71, 161, 0.3);
+    }
+
+    /* 🎓 Student Card */
+    .student-card {
+        border-radius: 15px;
+        border: none;
+        background: linear-gradient(145deg, #f8f9fa, #e3f2fd);
+        box-shadow: 0 6px 20px rgba(0, 0, 100, 0.15);
+        animation: fadeInCard 0.9s ease-in-out;
+    }
+
+    .student-card h3 {
+        color: #0d47a1;
+        font-weight: 800;
+    }
+
+    .student-card h5 {
+        color: #1565c0;
+        font-weight: 700;
+    }
+
+    /* 📋 Attendance Table */
+    table {
+        border-radius: 12px;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    table thead {
+        background-color: #0d47a1;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        padding: 12px;
+        font-weight: 500;
+    }
+
+    table tbody tr:hover {
+        background-color: #e3f2fd;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    /* ✅ Responsive Design */
+    @media (max-width: 992px) {
+        .attendance-container {
+            padding: 30px;
+        }
+
+        h2.page-title {
+            font-size: 1.6rem;
+        }
+
+        .btn-search {
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .attendance-container {
+            padding: 25px;
+        }
+
+        h2.page-title {
+            font-size: 1.4rem;
+        }
+
+        .student-card h3 {
+            font-size: 1.3rem;
+        }
+
+        .attendance-form input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .attendance-container {
+            padding: 20px;
+        }
+
+        h2.page-title {
+            font-size: 1.2rem;
+        }
+
+        table {
+            font-size: 0.85rem;
+        }
+    }
+</style>
+
 <div class="container my-5">
-    <h2 class="text-center mb-4">Student Attendance</h2>
+    <div class="attendance-container mx-auto">
+        <h2 class="text-center mb-4 page-title">🎓 Student Attendance</h2>
 
-    <form method="post" class="mb-4 text-center">
-        {% csrf_token %}
-        <input type="text" name="roll_number" placeholder="Enter Roll Number" class="form-control d-inline-block" style="width:200px;">
-        <button type="submit" class="btn btn-primary ms-2">Show Attendance</button>
-    </form>
+        <form method="post" class="attendance-form mb-4 text-center">
+            {% csrf_token %}
+            <input type="text" name="roll_number" placeholder="Enter Roll Number" class="form-control d-inline-block me-2">
+            <button type="submit" class="btn btn-search">Show Attendance</button>
+        </form>
 
-    {% if student %}
-        <!-- Student Info Card -->
-        <div class="card mb-4 shadow-sm mx-auto" style="max-width: 500px; border-radius: 10px;">
-            <div class="card-body text-center">
-                <h3 class="card-title fw-bold">{{ student.name }}</h3>
-                <p class="mb-1"><strong>Roll No:</strong> {{ student.roll_number }}</p>
-                <p class="mb-2"><strong>Class:</strong> {{ student.student_class }} - {{ student.section }}</p>
-                <h5 class="fw-bold text-primary">Your Attendance: {{ attendance_percentage }}%</h5>
+        {% if student %}
+            <!-- Student Info Card -->
+            <div class="card student-card mb-4 mx-auto text-center" style="max-width: 500px;">
+                <div class="card-body">
+                    <h3 class="card-title">{{ student.name }}</h3>
+                    <p><strong>Roll No:</strong> {{ student.roll_number }}</p>
+                    <p><strong>Class:</strong> {{ student.student_class }} - {{ student.section }}</p>
+                    <h5>Your Attendance: {{ attendance_percentage }}%</h5>
+                </div>
             </div>
-        </div>
 
-        <!-- Attendance Table -->
-        <div class="table-responsive">
-            <table class="table table-bordered text-center align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>DATE</th>
-                        {% for subject in subjects %}
-                            <th>{{ subject.name|upper }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for dt in sorted_dates %}
+            <!-- Attendance Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered text-center align-middle shadow-sm">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            {% for subject in subjects %}
+                                <th>{{ subject.name|upper }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dt in sorted_dates %}
                         <tr>
                             <td>{{ dt|date:"Y-m-d" }}</td>
                             {% for subject in subjects %}
                                 {% with status=attendance_matrix|get_item:dt|get_item:subject.name %}
                                     {% if status == "P" %}
-                                        <td class="bg-success text-white">&#10004;</td>
+                                        <td class="bg-success text-white fw-bold">&#10004;</td>
                                     {% elif status == "A" %}
-                                        <td class="bg-danger text-white">&#10006;</td>
+                                        <td class="bg-danger text-white fw-bold">&#10006;</td>
                                     {% else %}
-                                        <td class="bg-secondary text-white">&#8211;</td>
+                                        <td class="bg-secondary text-white fw-bold">&#8211;</td>
                                     {% endif %}
                                 {% endwith %}
                             {% endfor %}
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-        <!-- Summary -->
-        <div class="mt-3 text-center">
-            <strong>Total Classes:</strong> {{ total_classes }} |
-            <strong>Present:</strong> {{ present_count }}
-        </div>
-    {% endif %}
+            <!-- Summary -->
+            <div class="mt-3 text-center fw-semibold">
+                <strong>Total Classes:</strong> {{ total_classes }} |
+                <strong>Present:</strong> {{ present_count }}
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
