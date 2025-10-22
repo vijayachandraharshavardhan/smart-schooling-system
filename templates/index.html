@@ -90,17 +90,26 @@
     font-size: clamp(0.9rem, 2vw, 1.2rem);
     opacity: 0.9;
   }
+
+  /* CTA Button */
   .cta-btn {
-    background-color: #ff6600;
+    background: linear-gradient(90deg, #ff6600, #ff9900);
     border: none;
     padding: 12px 30px;
     border-radius: 30px;
     color: #fff;
     font-size: 1.1rem;
-    transition: 0.3s;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(255, 102, 0, 0.4);
     margin-top: 20px;
   }
-  .cta-btn:hover { background-color: #ff8533; transform: scale(1.05); }
+  .cta-btn:hover {
+    background: linear-gradient(90deg, #ff8533, #ffb366);
+    transform: scale(1.08);
+    box-shadow: 0 6px 14px rgba(255, 102, 0, 0.6);
+  }
 
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
@@ -110,33 +119,99 @@
   /* Dashboard Section */
   #dashboard {
     padding: 80px 0;
-    background-color: #f9fafb;
+    background: linear-gradient(180deg, #fff 0%, #fef5ed 100%);
     display: none;
+    transition: all 0.5s ease;
   }
-  #dashboard.show { display: block; animation: fadeIn 1s ease-in; }
+  #dashboard.show {
+    display: block;
+    animation: fadeIn 1s ease-in;
+  }
   #dashboard h2 {
     text-align: center;
     font-weight: 700;
-    color: #e65c00;
+    color: #ff6600;
     margin-bottom: 50px;
   }
 
+  /* Dashboard Cards */
   .dashboard-card {
-    border-radius: 15px;
+    border-radius: 18px;
     background: #fff;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
-    padding: 30px 20px;
-    transition: transform 0.3s ease;
+    padding: 35px 20px;
+    transition: all 0.4s ease;
+    border: 1px solid transparent;
+    opacity: 0;
+    transform: translateY(30px);
   }
-  .dashboard-card:hover { transform: scale(1.05); }
-  .dashboard-card h4 { font-weight: 600; margin-bottom: 10px; }
-  .dashboard-card p { font-size: 0.95rem; color: #555; }
+  .dashboard-card.show {
+    opacity: 1;
+    transform: translateY(0);
+    transition: 0.6s ease;
+  }
+  .dashboard-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(255, 102, 0, 0.2);
+    border: 1px solid #ff6600;
+  }
 
-  .btn-admin { background: orange; color: #fff; }
-  .btn-teacher { background: green; color: #fff; }
-  .btn-student { background: #ffc107; color: #fff; }
-  .btn-achievements { background: #007bff; color: #fff; }
+  .dashboard-card h4 {
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 10px;
+  }
+  .dashboard-card p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  /* Button Gradients */
+  .btn-admin {
+    background: linear-gradient(90deg, #ff4d4d, #ff6b6b);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  .btn-admin:hover {
+    background: linear-gradient(90deg, #ff6b6b, #ff9999);
+  }
+
+  .btn-teacher {
+    background: linear-gradient(90deg, #28a745, #43c67b);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  .btn-teacher:hover {
+    background: linear-gradient(90deg, #43c67b, #6dde96);
+  }
+
+  .btn-student {
+    background: linear-gradient(90deg, #ffc107, #ffde59);
+    color: #333;
+    border: none;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  .btn-student:hover {
+    background: linear-gradient(90deg, #ffde59, #fff1a6);
+  }
+
+  .btn-achievements {
+    background: linear-gradient(90deg, #007bff, #00bfff);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  .btn-achievements:hover {
+    background: linear-gradient(90deg, #00bfff, #66d9ff);
+  }
 
   /* Footer */
   footer {
@@ -258,15 +333,22 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   function showDashboard() {
-    document.getElementById('dashboard').classList.add('show');
-    window.scrollTo({ top: document.getElementById('dashboard').offsetTop - 80, behavior: 'smooth' });
+    const dashboard = document.getElementById('dashboard');
+    dashboard.classList.add('show');
+    window.scrollTo({ top: dashboard.offsetTop - 80, behavior: 'smooth' });
+    // Animate cards
+    const cards = document.querySelectorAll('.dashboard-card');
+    cards.forEach((card, i) => {
+      setTimeout(() => card.classList.add('show'), i * 150);
+    });
   }
+
   function hideDashboard() {
     document.getElementById('dashboard').classList.remove('show');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Close navbar on mobile after click
+  // Close navbar on mobile
   document.addEventListener("DOMContentLoaded", () => {
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
     const navbarCollapse = document.getElementById('navbarNav');
