@@ -14,9 +14,18 @@ load_dotenv()
 # ------------------------------------------------------
 # SECURITY
 # ------------------------------------------------------
-SECRET_KEY = os.getenv("SECRET_KEY", "replace-this-with-a-strong-key")
+SECRET_KEY = os.getenv("SECRET_KEY", "P2TSKAMghkuvqdr6xt-WJdap6J9lrLZXOB0cRVmafKxMatH1FP2IsR5FlqY_RmbQypM")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ["*"]  # For Render; you can restrict later
+
+# Production security settings
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
 # ------------------------------------------------------
 # INSTALLED APPS
