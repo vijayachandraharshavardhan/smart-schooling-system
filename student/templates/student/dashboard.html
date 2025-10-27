@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block extra_head %}
+<!-- ✅ Add this if not already in base.html -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #eef3ff, #ffffff);
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 50px;
+    margin-top: 20px;
+  }
+
+  .dashboard-header h2 {
+    font-weight: 700;
+    color: #1a2a4b;
+    font-size: 2.2rem;
+  }
+
+  .dashboard-header p {
+    color: #6c757d;
+    font-size: 1rem;
+  }
+
+  .card {
+    border: none;
+    border-radius: 18px;
+    transition: all 0.4s ease;
+    background: linear-gradient(145deg, #ffffff, #f1f3f8);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+  }
+
+  .card i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    transition: all 0.4s ease;
+    display: inline-block;
+  }
+
+  .card:hover i {
+    transform: scale(1.2) rotate(8deg);
+    filter: drop-shadow(0 0 10px rgba(13, 110, 253, 0.5));
+  }
+
+  .card h5 {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+
+  .card p {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    border-radius: 30px;
+    font-weight: 500;
+    padding: 8px 26px;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    transform: scale(1.08);
+  }
+
+  @media (max-width: 768px) {
+    .card {
+      margin-bottom: 25px;
+    }
+  }
+</style>
+
+<div class="container mt-5 mb-5">
+  <div class="dashboard-header">
+    <h2>👨‍🎓 Student Dashboard</h2>
+    <p>Stay on top of your classes — check attendance, assignments, exams, and performance.</p>
+  </div>
+
+  <div class="row justify-content-center">
+
+    <!-- Attendance -->
+    <div class="col-lg-3 col-md-5 col-sm-6 mt-3">
+      <div class="card text-center p-4">
+        <i class="bi bi-calendar-check text-primary"></i>
+        <h5>Attendance</h5>
+        <p>View your daily and monthly attendance records.</p>
+        <a href="{% url 'student:attendance' %}" class="btn btn-primary mt-2">Go</a>
+      </div>
+    </div>
+
+    <!-- Homework -->
+    <div class="col-lg-3 col-md-5 col-sm-6 mt-3">
+      <div class="card text-center p-4">
+        <i class="bi bi-book-half text-success"></i>
+        <h5>Homework</h5>
+        <p>Check your latest homework and class assignments.</p>
+        <a href="{% url 'student:homework' %}" class="btn btn-success mt-2">Go</a>
+      </div>
+    </div>
+
+    <!-- Exams -->
+    <div class="col-lg-3 col-md-5 col-sm-6 mt-3">
+      <div class="card text-center p-4">
+        <i class="bi bi-pencil-square text-danger"></i>
+        <h5>Exams</h5>
+        <p>See upcoming and past exam schedules and details.</p>
+        <a href="{% url 'student:exams' %}" class="btn btn-danger mt-2">Go</a>
+      </div>
+    </div>
+
+    <!-- Performance -->
+    <div class="col-lg-3 col-md-5 col-sm-6 mt-3">
+      <div class="card text-center p-4">
+        <i class="bi bi-bar-chart-line text-info"></i>
+        <h5>Performance</h5>
+        <p>Analyze your subject-wise marks and teacher feedback.</p>
+        <a href="{% url 'student:performance' %}" class="btn btn-info mt-2">Go</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
