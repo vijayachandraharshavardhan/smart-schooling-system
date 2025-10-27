@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    .content {
+        flex: 1;
+    }
+
+    footer {
+        margin-top: auto;
+        background-color: #212529;
+        color: white;
+        text-align: center;
+        padding: 15px 0;
+        font-size: 0.9rem;
+    }
+
+    .about-container {
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 20px;
+    }
+
+    .about-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #ff6600; /* Changed to orange */
+        margin-bottom: 10px;
+    }
+
+    .about-subtitle {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+    }
+
+    .card {
+        max-width: 900px;
+        margin: 20px auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .card-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 15px;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 25px;
+    }
+
+    .pdf-section {
+        width: 100%;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    .pdf-viewer {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+    }
+
+    .no-content {
+        text-align: center;
+        font-size: 1.3rem;
+        color: #6c757d;
+        margin-top: 20%;
+    }
+</style>
+
+<div class="content">
+    <div class="about-container">
+        <h1 class="about-title">About Us</h1>
+        <p class="about-subtitle">Learn more about who we are and what we stand for.</p>
+    </div>
+
+    {% if about_entries %}
+        {% for entry in about_entries %}
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body">
+                    {% if entry.title %}
+                        <h3 class="card-title">{{ entry.title }}</h3>
+                    {% endif %}
+
+                    {% if entry.description %}
+                        <p class="card-text">{{ entry.description|linebreaks }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if entry.document %}
+                <div class="pdf-section">
+                    <iframe
+                        id="pdfFrame{{ forloop.counter }}"
+                        class="pdf-viewer"
+                        src="https://docs.google.com/gview?embedded=true&url={{ entry.document.url|urlencode }}"
+                        onerror="fallbackToEmbed('{{ forloop.counter }}', '{{ entry.document.url }}')">
+                    </iframe>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div class="no-content">
+            <p>No About Us entries available.</p>
+        </div>
+    {% endif %}
+</div>
+
+
+
+<script>
+function fallbackToEmbed(frameId, pdfUrl) {
+    const frame = document.getElementById('pdfFrame' + frameId);
+    if (frame) {
+        frame.outerHTML = `<embed src="${pdfUrl}" type="application/pdf" class="pdf-viewer">`;
+    }
+}
+</script>
+{% endblock %}

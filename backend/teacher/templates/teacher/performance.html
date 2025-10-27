@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Teacher - Performance{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3 class="fw-bold text-primary mb-4">Update Student Performance</h3>
+  <form method="POST" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Class & Section</label>
+      <select class="form-select" name="class_id" required>
+        {% for cls in classes %}
+          <option value="{{ cls.id }}">{{ cls.class_name }} - {{ cls.section }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Student Name</label>
+      <input type="text" name="student_name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Subject</label>
+      <input type="text" name="subject" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Marks</label>
+      <input type="number" name="marks" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Remarks</label>
+      <textarea name="remarks" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Save Performance</button>
+  </form>
+</div>
+{% endblock %}

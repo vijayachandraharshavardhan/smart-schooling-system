@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center fw-bold text-primary mb-4">Mark Attendance</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label>Class Section:</label>
+        <select name="class_id" class="form-control">
+          {% for cls in classes %}
+          <option value="{{ cls.id }}">{{ cls.class_name }} - {{ cls.section }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label>Subject:</label>
+        <select name="subject_id" class="form-control">
+          {% for subj in subjects %}
+          <option value="{{ subj.id }}">{{ subj.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label>Date:</label>
+      <input type="date" name="date" class="form-control" value="{{ today|default:date:'Y-m-d' }}">
+    </div>
+
+    <hr>
+    <h5>Mark Attendance:</h5>
+    {% for student in students %}
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span>{{ student.name }} ({{ student.roll_number }})</span>
+        <select name="status_{{ student.id }}" class="form-select" style="width:100px;">
+          <option value="P">P</option>
+          <option value="A">A</option>
+        </select>
+      </div>
+    {% empty %}
+      <p class="text-muted">No students found for selected class.</p>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary w-100 mt-3">Submit Attendance</button>
+  </form>
+</div>
+{% endblock %}

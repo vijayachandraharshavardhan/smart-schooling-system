@@ -1,0 +1,10 @@
+{% load static %}
+<h2>School Profile (Admin) - Upload logo & photos</h2>
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<label>School Name: <input type="text" name="name"></label><br>
+<label>Logo: <input type="file" name="logo"></label><br>
+<label>HM Photo: <input type="file" name="hm_photo"></label><br>
+<label>Correspondent Photo: <input type="file" name="correspondent_photo"></label><br>
+<button type="submit">Save</button>
+</form>

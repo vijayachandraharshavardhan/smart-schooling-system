@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Student | Exams{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <h2 class="text-center fw-bold text-primary mb-4">View Exam Schedule</h2>
+
+  <!-- Alerts -->
+  {% if messages %}
+  <div class="mb-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Roll Number Form -->
+  <form method="POST" class="card p-4 shadow-sm mb-4">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Enter Your Roll Number</label>
+      <input type="text" name="roll_number" class="form-control" placeholder="e.g., 1023" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">View Exams</button>
+  </form>
+
+  {% if student %}
+    <h4 class="text-center text-success fw-bold mb-4">
+      Exam Schedule for {{ student.student_class.class_name }} - {{ student.student_class.section }}
+    </h4>
+
+    {% if exam_records %}
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle text-center">
+              <thead class="table-primary">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Subject</th>
+                  <th scope="col">Exam Date</th>
+                  <th scope="col">Max Marks</th>
+                  <th scope="col">Syllabus</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for ex in exam_records %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td class="fw-semibold text-primary">{{ ex.subject }}</td>
+                  <td>{{ ex.exam_date|date:"d M, Y" }}</td>
+                  <td>{{ ex.max_marks }}</td>
+                  <td class="text-start">{{ ex.syllabus }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <p class="text-center text-muted mt-3">📚 No exams scheduled yet.</p>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Select Class{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3 class="text-center">Select Class</h3>
+  <div class="row mt-4 justify-content-center">
+    {% for cls in classes %}
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm p-3 mb-3">
+        <h5>{{ cls.class_name }} - {{ cls.section }}</h5>
+        <a href="{% url student_type selected_field cls.id %}" class="btn btn-primary mt-2">Select</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary">Virtual Classes</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for vc in virtual_classes %}
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ vc.name }}</h5>
+                    <p><strong>Class:</strong> {{ vc.class_assigned.name }}</p>
+                    <p><strong>Schedule:</strong> {{ vc.schedule }}</p>
+                    <a href="{{ vc.link }}" class="btn btn-primary" target="_blank">Join Class</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+/* ===============================
+   General Body
+================================ */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===============================
+   Header
+================================ */
+header {
+  background: rgba(255, 102, 0, 0.8);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  position: relative;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+header .tagline {
+  font-style: italic;
+  font-size: 18px;
+}
+
+/* ===============================
+   Profile images (HM, Correspondent)
+================================ */
+.profile {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  position: absolute;
+  top: 10px;
+}
+
+.profile-left {
+  left: 20px;
+}
+
+.profile-right {
+  right: 20px;
+}
+
+/* ===============================
+   Dashboard Cards
+================================ */
+.dashboard-card {
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  z-index: 0;
+}
+
+.dashboard-card:hover {
+  transform: scale(1.08);
+}
+
+/* Glowing Aura Effect */
+.dashboard-card::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 20px;
+  background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff0099, #9900ff);
+  background-size: 400% 400%;
+  filter: blur(18px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.4s ease-in-out;
+  animation: glowing 8s linear infinite;
+}
+
+.dashboard-card:hover::before {
+  opacity: 1;
+}
+
+@keyframes glowing {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===============================
+   Responsive
+================================ */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 20px;
+  }
+  .profile {
+    width: 60px;
+    height: 60px;
+  }
+}

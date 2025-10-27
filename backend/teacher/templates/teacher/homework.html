@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Homework{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Add Homework</h2>
+
+    <!-- Show success alert -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label>Class</label>
+            <select name="class_id" class="form-select">
+                <option value="">-- Select Class --</option>
+                {% for cls in classes %}
+                    <option value="{{ cls.id }}">{{ cls.class_name }} - {{ cls.section }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Subject</label>
+            <select name="subject" class="form-select">
+                <option value="">-- Select Subject --</option>
+                {% for sub in subjects %}
+                    <option value="{{ sub.id }}">{{ sub.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+            <label>Due Date</label>
+            <input type="date" name="due_date" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Homework</button>
+    </form>
+</div>
+{% endblock %}
