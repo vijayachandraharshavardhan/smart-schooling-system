@@ -182,12 +182,6 @@ CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SAMESITE = "Lax"
 
 # -----------------------------------
-# PRODUCTION SETTINGS OVERRIDE
-# -----------------------------------
-if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('HEROKU_APP_NAME') or os.environ.get('RENDER_SERVICE_ID'):
-    from .settings_production import *
-
-# -----------------------------------
 # INSTALLED APPS
 # -----------------------------------
 INSTALLED_APPS = [
@@ -228,6 +222,12 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# -----------------------------------
+# PRODUCTION SETTINGS OVERRIDE
+# -----------------------------------
+if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('HEROKU_APP_NAME') or os.environ.get('RENDER_SERVICE_ID'):
+    from .settings_production import *
 
 # -----------------------------------
 # URLS + WSGI
