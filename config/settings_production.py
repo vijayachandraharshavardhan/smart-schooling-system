@@ -7,17 +7,20 @@ from .settings import *
 # -----------------------------------
 
 # SECURITY
-SECRET_KEY = os.environ.get('SECRET_KEY', 'your-super-secret-key-here-change-this')
+SECRET_KEY = os.environ.get('SECRET_KEY')
+if not SECRET_KEY:
+    import secrets
+    SECRET_KEY = secrets.token_urlsafe(50)
 DEBUG = False
 ALLOWED_HOSTS = ['*']  # Allow all hosts for Render deployment
 
 # -----------------------------------
 # DATABASE (PostgreSQL for production)
 # -----------------------------------
-# Database configuration using DATABASE_URL (for Render)
+# Database configuration for Render
 import dj_database_url
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL', 'postgresql://user:password@localhost:5432/dbname'))
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL', 'postgresql://smart_schooling_user:password@dpg-xxx-render-provided-host:5432/smart_schooling'))
 }
 
 # -----------------------------------
@@ -43,7 +46,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # -----------------------------------
 # SECURITY SETTINGS
 # -----------------------------------
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False  # Render handles SSL
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'

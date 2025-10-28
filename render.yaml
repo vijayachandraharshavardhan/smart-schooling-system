@@ -2,7 +2,7 @@ services:
   - type: web
     name: smart-schooling-system
     runtime: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements_production.txt
     startCommand: python manage.py migrate && python manage.py createsuperuser --noinput --username Harsha@108 --email harsha@school.com || true && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DJANGO_SETTINGS_MODULE
@@ -16,5 +16,11 @@ services:
       - key: RENDER
         value: true
     healthCheckPath: /health/
+
+databases:
+  - name: smart-schooling-db
+    databaseName: smart_schooling
+    user: smart_schooling_user
+    plan: starter
 
 
