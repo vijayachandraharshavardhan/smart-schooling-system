@@ -1,10 +1,29 @@
 {% load static %}
 <h2>School Profile (Admin) - Upload logo & photos</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
 <form method="post" enctype="multipart/form-data">
 {% csrf_token %}
-<label>School Name: <input type="text" name="name"></label><br>
-<label>Logo: <input type="file" name="logo"></label><br>
-<label>HM Photo: <input type="file" name="hm_photo"></label><br>
-<label>Correspondent Photo: <input type="file" name="correspondent_photo"></label><br>
+<label>School Name: <input type="text" name="name" value="{{ profile.school_name }}" required></label><br><br>
+<label>Logo: <input type="file" name="logo" accept="image/*"></label><br>
+{% if profile.logo %}
+    <p>Current Logo: <img src="{{ profile.logo.url }}" alt="Current Logo" style="max-width: 100px;"></p>
+{% endif %}
+<br>
+<label>HM Photo: <input type="file" name="hm_photo" accept="image/*"></label><br>
+{% if profile.principal_photo %}
+    <p>Current HM Photo: <img src="{{ profile.principal_photo.url }}" alt="Current HM Photo" style="max-width: 100px;"></p>
+{% endif %}
+<br>
+<label>Correspondent Photo: <input type="file" name="correspondent_photo" accept="image/*"></label><br>
+{% if profile.correspondent_photo %}
+    <p>Current Correspondent Photo: <img src="{{ profile.correspondent_photo.url }}" alt="Current Correspondent Photo" style="max-width: 100px;"></p>
+{% endif %}
+<br>
 <button type="submit">Save</button>
 </form>

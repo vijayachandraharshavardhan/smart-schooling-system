@@ -10,7 +10,7 @@ urlpatterns = [
     path('manage-users/', TemplateView.as_view(template_name='admin_portal/manage_users.html'), name="manage_users"),
     path('manage-classes/', TemplateView.as_view(template_name='admin_portal/manage_classes.html'), name="manage_classes"),
     path('reports/', TemplateView.as_view(template_name='admin_portal/reports.html'), name="reports"),
-    path('school-profile/', TemplateView.as_view(template_name='admin_portal/school_profile.html'), name="school_profile"),
+    path('school-profile/', views.school_profile_view, name="school_profile"),
 
     # -------- Public Site --------
     path('home/', views.home_view, name="home"),           # ✅ renders home.html

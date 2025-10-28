@@ -14,7 +14,7 @@ urlpatterns = [
     # ------------------------------
     # Homepage (public site root)
     # ------------------------------
-    path("", TemplateView.as_view(template_name="index.html"), name="home"),
+    path("", include(("school.urls", "school"), namespace="school")),  # use school.home view for profile context
 
     # ------------------------------
     # Django default admin
@@ -49,7 +49,6 @@ urlpatterns = [
     path("aboutus/", include(("aboutus.urls", "aboutus"), namespace="aboutus")),
     path("ranks/", include(("ranks.urls", "ranks"), namespace="ranks")),
     path("contactus/", include(("contactus.urls", "contactus"), namespace="contactus")),
-    path("", include(("school.urls", "school"), namespace="school")),  # fallback school app
 ]
 
 # ------------------------------
