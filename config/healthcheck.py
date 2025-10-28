@@ -1,5 +1,5 @@
 """
-Simple healthcheck view for Railway deployment
+Simple healthcheck view for Railway and Render deployment
 """
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -21,6 +21,7 @@ def healthcheck(request):
                 "DEBUG": os.environ.get('DEBUG', 'Not set'),
                 "DJANGO_SETTINGS_MODULE": os.environ.get('DJANGO_SETTINGS_MODULE', 'Not set'),
                 "RAILWAY_ENVIRONMENT": os.environ.get('RAILWAY_ENVIRONMENT', 'Not set'),
+                "RENDER": os.environ.get('RENDER', 'Not set'),
                 "SECRET_KEY_SET": "Yes" if os.environ.get('SECRET_KEY') else "No",
                 "DATABASE_URL_SET": "Yes" if os.environ.get('DATABASE_URL') else "No",
             }
