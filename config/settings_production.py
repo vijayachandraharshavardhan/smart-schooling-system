@@ -20,7 +20,7 @@ ALLOWED_HOSTS = ['*']  # Allow all hosts for Render deployment
 # Database configuration for Render
 import dj_database_url
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL', 'postgresql://smart_schooling_user:password@dpg-xxx-render-provided-host:5432/smart_schooling'))
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
 }
 
 # -----------------------------------
