@@ -20,7 +20,7 @@ ALLOWED_HOSTS = ['*']  # Allow all hosts for Render deployment
 # Database configuration for Render
 import dj_database_url
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+    'default': dj_database_url.parse('postgresql://deeptihome_user:30u9m67dN95DoisgtDLn4bvbBtH7khNy@dpg-d3vpoo49c44c738q3c8g-a.oregon-postgres.render.com/deeptihome')
 }
 
 # -----------------------------------
