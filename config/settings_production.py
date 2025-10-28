@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -----------------------------------
 
 # SECURITY
-SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-default-key')  # fallback for safety
+SECRET_KEY = os.environ.get('SECRET_KEY', 'juybaItHJJr3gt7aHGrfuxwTjWeGVe2g8xCj5M4UhEigAf448FvyE8ZKmYPI-WXHbPW8')  # fallback for safety
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # ✅ Add your Render domain & localhost
@@ -74,7 +74,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # -----------------------------------
 # SECURITY SETTINGS
 # -----------------------------------
-SECURE_SSL_REDIRECT = False  # Render handles SSL
+SECURE_SSL_REDIRECT = True  # Enable SSL redirect for production
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
