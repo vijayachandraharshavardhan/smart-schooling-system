@@ -9,13 +9,7 @@ from .settings import *
 # SECURITY
 SECRET_KEY = os.environ.get('SECRET_KEY', 'your-super-secret-key-here-change-this')
 DEBUG = False
-ALLOWED_HOSTS = [
-    '*.onrender.com', # Render domains
-    'smart-schooling-system.onrender.com',
-    'localhost',
-    '127.0.0.1',
-    '0.0.0.0',
-]
+ALLOWED_HOSTS = ['*']  # Allow all hosts for Render deployment
 
 # -----------------------------------
 # DATABASE (PostgreSQL for production)
