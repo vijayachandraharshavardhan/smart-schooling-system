@@ -184,7 +184,7 @@ SESSION_COOKIE_SAMESITE = "Lax"
 # -----------------------------------
 # PRODUCTION SETTINGS OVERRIDE
 # -----------------------------------
-if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('HEROKU_APP_NAME') or os.environ.get('RENDER'):
+if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('HEROKU_APP_NAME') or os.environ.get('RENDER_SERVICE_ID'):
     from .settings_production import *
 
 # -----------------------------------
