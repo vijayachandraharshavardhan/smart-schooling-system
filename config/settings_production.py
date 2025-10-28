@@ -4,22 +4,34 @@ from pathlib import Path
 from .settings import *
 
 # -----------------------------------
+# BASE DIR FIX
+# -----------------------------------
+# Ensure BASE_DIR is defined even when imported from settings
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# -----------------------------------
 # PRODUCTION SETTINGS
 # -----------------------------------
 
 # SECURITY
 SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-default-key')  # fallback for safety
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = ['smart-schooling-system.onrender.com', '.onrender.com', 'localhost', '127.0.0.1']
+
+# ✅ Add your Render domain & localhost
+ALLOWED_HOSTS = [
+    'smart-schooling-system.onrender.com',
+    '.onrender.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 # -----------------------------------
 # DATABASE (PostgreSQL for Render)
 # -----------------------------------
-
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
-    # ✅ SSL REQUIRED for Render PostgreSQL
+    # ✅ Render PostgreSQL with SSL required
     DATABASES = {
         'default': dj_database_url.parse(
             DATABASE_URL,
@@ -28,7 +40,7 @@ if DATABASE_URL:
         )
     }
 else:
-    # fallback (only used locally)
+    # fallback for local development
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -47,7 +59,6 @@ else:
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Add this only if you have a local /static folder
 if (BASE_DIR / 'static').exists():
     STATICFILES_DIRS = [BASE_DIR / 'static']
 
@@ -72,7 +83,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
 # -----------------------------------
-# CSRF Trusted Origins
+# ✅ CSRF Trusted Origins (important for Render)
 # -----------------------------------
 CSRF_TRUSTED_ORIGINS = [
     'https://smart-schooling-system.onrender.com',
