@@ -19,9 +19,26 @@ ALLOWED_HOSTS = ['*']  # Allow all hosts for Render deployment
 # -----------------------------------
 # Database configuration for Render
 import dj_database_url
-DATABASES = {
-    'default': dj_database_url.parse('postgresql://deeptihome_user:30u9m67dN95DoisgtDLn4bvbBtH7khNy@dpg-d3vpoo49c44c738q3c8g-a.oregon-postgres.render.com/deeptihome')
-}
+
+# Get DATABASE_URL from environment, fallback to Render's database
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
+else:
+    # Fallback configuration if DATABASE_URL is not set
+    # This should match the Render database created by render.yaml
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'smart_schooling',
+            'USER': 'smart_schooling_user',
+            'PASSWORD': os.environ.get('DB_PASSWORD', '30u9m67dN95DoisgtDLn4bvbBtH7khNy'),  # Update with actual password
+            'HOST': os.environ.get('DB_HOST', 'dpg-d3vpoo49c44c738q3c8g-a.oregon-postgres.render.com'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+        }
+    }
 
 # -----------------------------------
 # STATIC FILES (Production)
