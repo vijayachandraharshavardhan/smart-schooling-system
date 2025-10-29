@@ -84,23 +84,28 @@ def attendance(request):
         date = timezone.datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else today
         logger.info(f"Parsed date: {date}")
 
-        for student in students:
-            present = request.POST.get(f'present_{student.id}')
-            absent = request.POST.get(f'absent_{student.id}')
-            status = 'Present' if present else 'Absent' if absent else 'Absent'
-            logger.info(f"Student {student.id}: present={present}, absent={absent}, status={status}")
+        try:
+            for student in students:
+                present = request.POST.get(f'present_{student.id}')
+                absent = request.POST.get(f'absent_{student.id}')
+                status = 'Present' if present else 'Absent' if absent else 'Absent'
+                logger.info(f"Student {student.id}: present={present}, absent={absent}, status={status}")
 
-            Attendance.objects.update_or_create(
-                student=student,
-                subject=subject,
-                date=date,
-                defaults={'status': status, 'teacher': teacher,
-                          'class_section': teacher.class_section}
-            )
+                Attendance.objects.update_or_create(
+                    student=student,
+                    subject=subject,
+                    date=date,
+                    defaults={'status': status, 'teacher': teacher,
+                              'class_section': teacher.class_section}
+                )
 
-        messages.success(request, f"✅ Attendance saved successfully for {subject.name} on {date}.")
-        logger.info("Attendance saved, redirecting to teacher:attendance")
-        return redirect('teacher:attendance')
+            messages.success(request, f"✅ Attendance saved successfully for {subject.name} on {date}.")
+            logger.info("Attendance saved, redirecting to teacher:attendance")
+            return redirect('teacher:attendance')
+        except Exception as e:
+            logger.error(f"Error saving attendance: {e}")
+            messages.error(request, f"❌ Error saving attendance: {str(e)}")
+            return redirect('teacher:attendance')
 
     context = {
         'teacher': teacher,
