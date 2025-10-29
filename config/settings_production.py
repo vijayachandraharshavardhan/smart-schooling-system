@@ -19,6 +19,7 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     'smart-schooling-system.onrender.com',
+    'deepti-em-highschool.onrender.com',
     '.onrender.com',
     'localhost',
     '127.0.0.1',
@@ -108,6 +109,7 @@ SECURE_HSTS_PRELOAD = True
 # -----------------------------------
 CSRF_TRUSTED_ORIGINS = [
     'https://smart-schooling-system.onrender.com',
+    'https://deepti-em-highschool.onrender.com',
     'https://*.onrender.com',
 ]
 
