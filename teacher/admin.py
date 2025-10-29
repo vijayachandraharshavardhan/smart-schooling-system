@@ -69,3 +69,6 @@ class PerformanceAdmin(admin.ModelAdmin):
     list_display = ('student', 'class_section', 'subject', 'marks', 'updated_at')
     list_filter = ('class_section', 'subject', 'updated_at')
     search_fields = ('student__name', 'class_section__class_name')
+
+
+

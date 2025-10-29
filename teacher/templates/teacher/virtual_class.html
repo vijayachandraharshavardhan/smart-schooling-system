@@ -1,20 +1,73 @@
-{% extends 'base.html' %}
+ {% extends 'teacher/base.html' %}
+
+{% block title %}Virtual Classes{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4 text-primary">Virtual Classes</h2>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for vc in virtual_classes %}
-        <div class="col">
-            <div class="card shadow-sm h-100">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Virtual Classes</h3>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ vc.name }}</h5>
-                    <p><strong>Class:</strong> {{ vc.class_assigned.name }}</p>
-                    <p><strong>Schedule:</strong> {{ vc.schedule }}</p>
-                    <a href="{{ vc.link }}" class="btn btn-primary" target="_blank">Join Class</a>
+                    <!-- Create Virtual Class Form -->
+                    <form method="post" class="mb-4">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="text" name="name" class="form-control" placeholder="Class Name" required>
+                            </div>
+                            <div class="col-md-3">
+                                <select name="class_id" class="form-control" required>
+                                    <option value="">Select Class</option>
+                                    {% for class in classes %}
+                                    <option value="{{ class.id }}">{{ class }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="schedule" class="form-control" placeholder="e.g., Monday 10:00 AM - 11:00 AM" required>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="url" name="link" class="form-control" placeholder="Meeting Link" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Create Virtual Class</button>
+                    </form>
+
+                    <!-- Virtual Classes List -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Class Name</th>
+                                    <th>Class Assigned</th>
+                                    <th>Schedule</th>
+                                    <th>Link</th>
+                                    <th>Created At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for virtual_class in virtual_classes %}
+                                <tr>
+                                    <td>{{ virtual_class.name }}</td>
+                                    <td>{{ virtual_class.class_assigned }}</td>
+                                    <td>{{ virtual_class.schedule }}</td>
+                                    <td><a href="{{ virtual_class.link }}" target="_blank" class="btn btn-sm btn-success">Join Class</a></td>
+                                    <td>{{ virtual_class.created_at|date:"M d, Y H:i" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No virtual classes created yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}

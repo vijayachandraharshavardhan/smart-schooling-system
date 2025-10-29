@@ -14,9 +14,9 @@ def login_teacher(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        if user is not None and user.is_staff:  # Assuming teachers are staff
+        if user is not None and hasattr(user, 'teacher_profile'):  # Check for teacher profile
             login(request, user)
-            messages.success(request, f"Welcome, {user.username}!")
+            messages.success(request, f"Welcome, {user.teacher_profile.name}!")
             return redirect('teacher:dashboard')
         else:
             messages.error(request, "Invalid teacher credentials.")

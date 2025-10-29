@@ -141,3 +141,6 @@ class Performance(models.Model):
     def __str__(self):
         roll = getattr(self.student, 'roll_number', 'N/A')
         return f"{self.student.name} (Roll {roll}) - {self.subject.name}: {self.marks} Marks"
+
+
+

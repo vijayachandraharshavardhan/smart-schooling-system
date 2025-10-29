@@ -1,11 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
 
 from .models import ClassSection, Attendance, Homework, Exam, Performance, Teacher, Subject
 from student.models import Student
+
+# -------------------------------
+# HELPER FUNCTIONS
+# -------------------------------
+def is_teacher(user):
+    return hasattr(user, 'teacher_profile')
 
 # -------------------------------
 # TEACHER LOGIN
@@ -41,6 +47,7 @@ def teacher_logout(request):
 # DASHBOARD
 # -------------------------------
 @login_required(login_url='/users/login/teacher/')
+@user_passes_test(is_teacher, login_url='/users/login/teacher/')
 def dashboard(request):
     teacher = request.user.teacher_profile
     classes = ClassSection.objects.all()
@@ -51,6 +58,7 @@ def dashboard(request):
 # ATTENDANCE
 # -------------------------------
 @login_required(login_url='/users/login/teacher/')
+@user_passes_test(is_teacher, login_url='/users/login/teacher/')
 def attendance(request):
     teacher = request.user.teacher_profile
     subject = teacher.subject
@@ -100,6 +108,7 @@ def attendance(request):
 # HOMEWORK
 # -------------------------------
 @login_required(login_url='/users/login/teacher/')
+@user_passes_test(is_teacher, login_url='/users/login/teacher/')
 def homework(request):
     teacher = request.user.teacher_profile
     classes = ClassSection.objects.all()
@@ -137,6 +146,7 @@ def homework(request):
 # EXAMS
 # -------------------------------
 @login_required(login_url='/users/login/teacher/')
+@user_passes_test(is_teacher, login_url='/users/login/teacher/')
 def exams(request):
     teacher = request.user.teacher_profile
     classes = ClassSection.objects.all()
@@ -175,6 +185,7 @@ def exams(request):
 # PERFORMANCE
 # -------------------------------
 @login_required(login_url='/users/login/teacher/')
+@user_passes_test(is_teacher, login_url='/users/login/teacher/')
 def performance(request):
     teacher = request.user.teacher_profile
     classes = ClassSection.objects.all()
@@ -206,3 +217,6 @@ def performance(request):
         'students': students,
         'teacher': teacher
     })
+
+
+
