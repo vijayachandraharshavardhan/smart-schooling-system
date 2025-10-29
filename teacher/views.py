@@ -52,28 +52,43 @@ def dashboard(request):
 # -------------------------------
 @login_required(login_url='/users/login/teacher/')
 def attendance(request):
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(f"Attendance view called by user: {request.user}")
+
     teacher = request.user.teacher_profile
+    logger.info(f"Teacher profile: {teacher}, subject: {teacher.subject}, class_section: {teacher.class_section}")
+
     subject = teacher.subject
     if not subject:
+        logger.warning(f"Teacher {teacher} has no assigned subject")
         messages.warning(request, "You are not assigned to any subject yet!")
         return render(request, "teacher/attendance.html", {'teacher': teacher})
 
     students = Student.objects.filter(student_class=teacher.class_section).order_by('roll_number')
+    logger.info(f"Found {students.count()} students in class {teacher.class_section}")
+
     today = timezone.localdate()
+    logger.info(f"Today's date: {today}")
 
     # Load existing attendance
     attendance_data = {a.student_id: a.status for a in Attendance.objects.filter(
         subject=subject, date=today
     )}
+    logger.info(f"Existing attendance data: {attendance_data}")
 
     if request.method == "POST":
+        logger.info("Processing POST request for attendance")
         date_str = request.POST.get('date')
+        logger.info(f"Date from POST: {date_str}")
         date = timezone.datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else today
+        logger.info(f"Parsed date: {date}")
 
         for student in students:
             present = request.POST.get(f'present_{student.id}')
             absent = request.POST.get(f'absent_{student.id}')
             status = 'Present' if present else 'Absent' if absent else 'Absent'
+            logger.info(f"Student {student.id}: present={present}, absent={absent}, status={status}")
 
             Attendance.objects.update_or_create(
                 student=student,
@@ -84,6 +99,7 @@ def attendance(request):
             )
 
         messages.success(request, f"✅ Attendance saved successfully for {subject.name} on {date}.")
+        logger.info("Attendance saved, redirecting to teacher:attendance")
         return redirect('teacher:attendance')
 
     context = {
@@ -93,6 +109,7 @@ def attendance(request):
         'attendance_data': attendance_data,
         'today': today
     }
+    logger.info(f"Rendering attendance template with context: teacher={teacher}, subject={subject}, students_count={len(students)}")
     return render(request, 'teacher/attendance.html', context)
 
 
