@@ -68,7 +68,7 @@ def attendance(request):
     students = Student.objects.filter(student_class=teacher.class_section).order_by('roll_number')
     logger.info(f"Found {students.count()} students in class {teacher.class_section}")
 
-    today = timezone.localdate()
+    today = timezone.now().date()
     logger.info(f"Today's date: {today}")
 
     # Load existing attendance
