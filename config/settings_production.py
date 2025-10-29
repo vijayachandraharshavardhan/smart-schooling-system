@@ -1,23 +1,22 @@
 import os
-import dj_database_url
 from pathlib import Path
+import dj_database_url
 from .settings import *
 
 # -----------------------------------
 # BASE DIR FIX
 # -----------------------------------
-# Ensure BASE_DIR is defined even when imported from settings
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # -----------------------------------
-# PRODUCTION SETTINGS
+# SECURITY & HOSTS
 # -----------------------------------
-
-# SECURITY
-SECRET_KEY = os.environ.get('SECRET_KEY', 'juybaItHJJr3gt7aHGrfuxwTjWeGVe2g8xCj5M4UhEigAf448FvyE8ZKmYPI-WXHbPW8')  # fallback for safety
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'juybaItHJJr3gt7aHGrfuxwTjWeGVe2g8xCj5M4UhEigAf448FvyE8ZKmYPI-WXHbPW8'
+)
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# ✅ Add your Render domain & localhost
 ALLOWED_HOSTS = [
     'smart-schooling-system.onrender.com',
     '.onrender.com',
@@ -31,7 +30,7 @@ ALLOWED_HOSTS = [
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
-    # ✅ Render PostgreSQL with SSL required
+    # ✅ Use Render database with SSL
     DATABASES = {
         'default': dj_database_url.parse(
             DATABASE_URL,
@@ -40,7 +39,7 @@ if DATABASE_URL:
         )
     }
 else:
-    # fallback for local development
+    # Local fallback (for debugging)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -54,7 +53,7 @@ else:
     }
 
 # -----------------------------------
-# STATIC FILES (Production)
+# STATIC FILES (Whitenoise for Production)
 # -----------------------------------
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -68,22 +67,35 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # -----------------------------------
 # MEDIA FILES (Cloudinary for Production)
 # -----------------------------------
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 import cloudinary_storage
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-}
+# ✅ Initialize Cloudinary
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME', 'dtndpjoca'),
+    api_key=os.environ.get('CLOUDINARY_API_KEY', '286334493912764'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET', 'NeFTmB6QJeBiHx7IOrE0ikWTO88')
+)
+
+INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', 'dtndpjoca'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', '286334493912764'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', 'NeFTmB6QJeBiHx7IOrE0ikWTO88'),
+}
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'  # fallback for local
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # -----------------------------------
 # SECURITY SETTINGS
 # -----------------------------------
-SECURE_SSL_REDIRECT = True  # Enable SSL redirect for production
+SECURE_SSL_REDIRECT = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
@@ -92,7 +104,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
 # -----------------------------------
-# ✅ CSRF Trusted Origins (important for Render)
+# CSRF Trusted Origins
 # -----------------------------------
 CSRF_TRUSTED_ORIGINS = [
     'https://smart-schooling-system.onrender.com',
@@ -131,18 +143,3 @@ LOGGING = {
 # AUTO SUPERUSER PASSWORD (optional)
 # -----------------------------------
 os.environ.setdefault('DJANGO_SUPERUSER_PASSWORD', 'admin123')
-
-# -----------------------------------
-# MEDIA STORAGE (Cloudinary)
-# -----------------------------------
-if os.environ.get("CLOUDINARY_URL"):
-    INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
-
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-    }
-
-MEDIA_URL = '/media/'
