@@ -67,42 +67,69 @@ def dashboard(request):
 @user_passes_test(is_teacher, login_url='/users/login/teacher/')
 def attendance(request):
     logger.info(f"Teacher attendance accessed by user: {request.user.username}")
-    teacher = request.user.teacher_profile
+    try:
+        teacher = request.user.teacher_profile
+        logger.info(f"Teacher profile loaded: {teacher.name}")
+    except AttributeError:
+        logger.error(f"User {request.user.username} has no teacher profile")
+        messages.error(request, "Teacher profile not found.")
+        return redirect('teacher:dashboard')
+
     subject = teacher.subject
     if not subject:
         logger.warning(f"Teacher {teacher.name} not assigned to any subject")
         messages.warning(request, "You are not assigned to any subject yet!")
         return render(request, "teacher/attendance.html", {'teacher': teacher})
 
-    students = Student.objects.filter(student_class=teacher.class_section).order_by('roll_number')
+    try:
+        students = Student.objects.filter(student_class=teacher.class_section).order_by('roll_number')
+        logger.info(f"Students count: {students.count()}, Subject: {subject.name}")
+    except Exception as e:
+        logger.error(f"Error fetching students: {e}")
+        messages.error(request, "Error loading student data.")
+        return render(request, "teacher/attendance.html", {'teacher': teacher, 'subject': subject})
+
     today = timezone.localdate()
-    logger.info(f"Students count: {students.count()}, Subject: {subject.name}")
 
     # Load existing attendance
-    attendance_data = {a.student_id: a.status for a in Attendance.objects.filter(
-        subject=subject, date=today
-    )}
-    logger.info(f"Existing attendance records: {len(attendance_data)}")
+    try:
+        attendance_data = {a.student_id: a.status for a in Attendance.objects.filter(
+            subject=subject, date=today
+        )}
+        logger.info(f"Existing attendance records: {len(attendance_data)}")
+    except Exception as e:
+        logger.error(f"Error loading attendance data: {e}")
+        attendance_data = {}
+        messages.warning(request, "Could not load existing attendance data.")
 
     if request.method == "POST":
         date_str = request.POST.get('date')
-        date = timezone.datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else today
-        logger.info(f"Processing attendance for date: {date}")
+        try:
+            date = timezone.datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else today
+            logger.info(f"Processing attendance for date: {date}")
+        except ValueError:
+            logger.error(f"Invalid date format: {date_str}")
+            messages.error(request, "Invalid date format.")
+            date = today
 
-        for student in students:
-            status = request.POST.get(f'status_{student.id}', 'Absent')
-            logger.debug(f"Student {student.roll_number}: {status}")
+        try:
+            for student in students:
+                status = request.POST.get(f'status_{student.id}', 'Absent')
+                logger.debug(f"Student {student.roll_number}: {status}")
 
-            Attendance.objects.update_or_create(
-                student=student,
-                subject=subject,
-                date=date,
-                defaults={'status': status, 'teacher': teacher,
-                          'class_section': teacher.class_section}
-            )
+                Attendance.objects.update_or_create(
+                    student=student,
+                    subject=subject,
+                    date=date,
+                    defaults={'status': status, 'teacher': teacher,
+                              'class_section': teacher.class_section}
+                )
 
-        messages.success(request, f"✅ Attendance saved successfully for {subject.name} on {date}.")
-        return redirect('teacher:attendance')
+            messages.success(request, f"✅ Attendance saved successfully for {subject.name} on {date}.")
+            return redirect('teacher:attendance')
+        except Exception as e:
+            logger.error(f"Error saving attendance: {e}")
+            messages.error(request, "Error saving attendance data.")
 
     context = {
         'teacher': teacher,
@@ -111,6 +138,7 @@ def attendance(request):
         'attendance_data': attendance_data,
         'today': today
     }
+    logger.info("Rendering attendance template")
     return render(request, 'teacher/attendance.html', context)
 
 
