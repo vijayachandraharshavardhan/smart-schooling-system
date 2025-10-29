@@ -21,7 +21,7 @@ def attendance_view(request):
     Display student attendance:
     - Dates as rows
     - Subjects as columns
-    - Shows P (Present), A (Absent), - (no record)
+    - Shows ✅ / ❌ / - for each subject on each date
     """
     student = None
     subjects = []
@@ -31,35 +31,38 @@ def attendance_view(request):
 
     if request.method == "POST":
         roll_number = request.POST.get("roll_number", "").strip()
+
         if roll_number:
             try:
+                # Get student
                 student = Student.objects.get(roll_number=roll_number)
                 subjects = Subject.objects.filter(class_section=student.student_class).order_by('name')
 
-                # Build attendance matrix
+                # Get all attendance records for the student
                 records = Attendance.objects.filter(student=student).order_by('date')
                 dates = sorted(records.values_list('date', flat=True).distinct())
-                sorted_dates = dates  # pass sorted dates to template
+                sorted_dates = dates
 
                 # Initialize matrix with "-"
                 for dt in dates:
                     for subj in subjects:
                         attendance_matrix[dt][subj.name.upper()] = "-"
 
-                # Fill P/A
+                # Fill Present / Absent
                 for record in records:
-                    status = "P" if record.status.lower() == "present" else "A"
-                    attendance_matrix[record.date][record.subject.name.upper()] = status
+                    attendance_matrix[record.date][record.subject.name.upper()] = record.status
 
-                # Summary stats
+                # Attendance summary
                 total_classes = records.count()
                 present_count = records.filter(status__iexact="Present").count()
                 attendance_percentage = round((present_count / total_classes) * 100, 1) if total_classes else 0
 
+                messages.success(request, f"✅ Attendance loaded for Roll No: {roll_number}")
+
             except Student.DoesNotExist:
-                messages.error(request, f"No student found with Roll Number {roll_number}.")
+                messages.error(request, f"❌ No student found with Roll Number {roll_number}.")
         else:
-            messages.error(request, "Please enter your roll number.")
+            messages.error(request, "⚠️ Please enter your roll number.")
 
     return render(request, "student/attendance.html", {
         "student": student,
@@ -76,9 +79,7 @@ def attendance_view(request):
 # HOMEWORK VIEW
 # -------------------------------
 def homework_view(request):
-    """
-    Show homework for the student's class.
-    """
+    """Show homework for the student's class."""
     student = None
     homework_records = []
 
@@ -106,9 +107,7 @@ def homework_view(request):
 # EXAMS VIEW
 # -------------------------------
 def exams_view(request):
-    """
-    Show exam schedule for the student's class.
-    """
+    """Show exam schedule for the student's class."""
     student = None
     exam_records = []
 
@@ -136,9 +135,7 @@ def exams_view(request):
 # PERFORMANCE VIEW
 # -------------------------------
 def performance_view(request):
-    """
-    Show student's performance per subject.
-    """
+    """Show student's performance per subject."""
     student = None
     performance_records = []
 

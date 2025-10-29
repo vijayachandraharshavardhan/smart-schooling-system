@@ -39,7 +39,6 @@
         text-shadow: 0 2px 5px rgba(0, 0, 60, 0.15);
     }
 
-    /* 🎯 Input + Button Section */
     .attendance-form input {
         max-width: 250px;
         border: 2px solid #0d47a1;
@@ -69,7 +68,6 @@
         box-shadow: 0 6px 14px rgba(13, 71, 161, 0.3);
     }
 
-    /* 🎓 Student Card */
     .student-card {
         border-radius: 15px;
         border: none;
@@ -88,7 +86,6 @@
         font-weight: 700;
     }
 
-    /* 📋 Attendance Table */
     table {
         border-radius: 12px;
         overflow: hidden;
@@ -113,7 +110,6 @@
         transition: background-color 0.3s ease-in-out;
     }
 
-    /* ✅ Responsive Design */
     @media (max-width: 992px) {
         .attendance-container {
             padding: 30px;
@@ -174,7 +170,6 @@
         </form>
 
         {% if student %}
-            <!-- Student Info Card -->
             <div class="card student-card mb-4 mx-auto text-center" style="max-width: 500px;">
                 <div class="card-body">
                     <h3 class="card-title">{{ student.name }}</h3>
@@ -184,7 +179,6 @@
                 </div>
             </div>
 
-            <!-- Attendance Table -->
             <div class="table-responsive">
                 <table class="table table-bordered text-center align-middle shadow-sm">
                     <thead>
@@ -200,10 +194,10 @@
                         <tr>
                             <td>{{ dt|date:"Y-m-d" }}</td>
                             {% for subject in subjects %}
-                                {% with status=attendance_matrix|get_item:dt|get_item:subject.name %}
-                                    {% if status == "P" %}
+                                {% with status=attendance_matrix|get_item:dt|get_item:subject.name.upper %}
+                                    {% if status == "Present" %}
                                         <td class="bg-success text-white fw-bold">&#10004;</td>
-                                    {% elif status == "A" %}
+                                    {% elif status == "Absent" %}
                                         <td class="bg-danger text-white fw-bold">&#10006;</td>
                                     {% else %}
                                         <td class="bg-secondary text-white fw-bold">&#8211;</td>
@@ -216,7 +210,6 @@
                 </table>
             </div>
 
-            <!-- Summary -->
             <div class="mt-3 text-center fw-semibold">
                 <strong>Total Classes:</strong> {{ total_classes }} |
                 <strong>Present:</strong> {{ present_count }}

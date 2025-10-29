@@ -7,7 +7,6 @@ from django.utils import timezone
 from .models import ClassSection, Attendance, Homework, Exam, Performance, Teacher, Subject
 from student.models import Student
 
-
 # -------------------------------
 # TEACHER LOGIN
 # -------------------------------
@@ -54,38 +53,45 @@ def dashboard(request):
 @login_required(login_url='/users/login/teacher/')
 def attendance(request):
     teacher = request.user.teacher_profile
-    classes = ClassSection.objects.all()
-    selected_class = None
-    students = []
-    today = timezone.now().date()
+    subject = teacher.subject
+    if not subject:
+        messages.warning(request, "You are not assigned to any subject yet!")
+        return render(request, "teacher/attendance.html", {'teacher': teacher})
 
-    class_id = request.GET.get('class_id')
-    if class_id:
-        selected_class = get_object_or_404(ClassSection, id=class_id)
-        students = Student.objects.filter(student_class=selected_class).order_by('roll_number')
+    students = Student.objects.filter(student_class=teacher.class_section).order_by('roll_number')
+    today = timezone.localdate()
 
-    if request.method == 'POST' and selected_class:
+    # Load existing attendance
+    attendance_data = {a.student_id: a.status for a in Attendance.objects.filter(
+        subject=subject, date=today
+    )}
+
+    if request.method == "POST":
         date_str = request.POST.get('date')
         date = timezone.datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else today
 
         for student in students:
-            status = request.POST.get(f'status_{student.id}', 'Absent')
+            present = request.POST.get(f'present_{student.id}')
+            absent = request.POST.get(f'absent_{student.id}')
+            status = 'Present' if present else 'Absent' if absent else 'Absent'
+
             Attendance.objects.update_or_create(
-                class_section=selected_class,
                 student=student,
-                subject=teacher.subject,
+                subject=subject,
                 date=date,
-                defaults={'status': status, 'teacher': teacher}
+                defaults={'status': status, 'teacher': teacher,
+                          'class_section': teacher.class_section}
             )
-        messages.success(request, f"✅ Attendance saved for {selected_class} on {date}.")
-        return redirect(f'/teacher/attendance/?class_id={selected_class.id}')
+
+        messages.success(request, f"✅ Attendance saved successfully for {subject.name} on {date}.")
+        return redirect('teacher:attendance')
 
     context = {
-        'classes': classes,
-        'selected_class': selected_class,
+        'teacher': teacher,
+        'subject': subject,
         'students': students,
-        'today': today,
-        'subject': teacher.subject
+        'attendance_data': attendance_data,
+        'today': today
     }
     return render(request, 'teacher/attendance.html', context)
 
@@ -97,7 +103,7 @@ def attendance(request):
 def homework(request):
     teacher = request.user.teacher_profile
     classes = ClassSection.objects.all()
-    subjects = Subject.objects.all()
+    subjects = [teacher.subject] if teacher.subject else []
     homeworks = Homework.objects.all().order_by('-updated_at')
 
     if request.method == 'POST':
@@ -128,13 +134,13 @@ def homework(request):
 
 
 # -------------------------------
-# EXAMS  ✅ UPDATED
+# EXAMS
 # -------------------------------
 @login_required(login_url='/users/login/teacher/')
 def exams(request):
     teacher = request.user.teacher_profile
     classes = ClassSection.objects.all()
-    subjects = Subject.objects.all()
+    subjects = [teacher.subject] if teacher.subject else []
     exams = Exam.objects.all().order_by('-exam_date')
 
     if request.method == 'POST':
@@ -172,8 +178,8 @@ def exams(request):
 def performance(request):
     teacher = request.user.teacher_profile
     classes = ClassSection.objects.all()
-    subjects = Subject.objects.all()
-    students = Student.objects.all()
+    subjects = [teacher.subject] if teacher.subject else []
+    students = Student.objects.filter(student_class=teacher.class_section).order_by('roll_number')
 
     if request.method == 'POST':
         class_id = request.POST.get('class_id')
