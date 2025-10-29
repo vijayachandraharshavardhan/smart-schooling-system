@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_tags %}
 
 {% block title %}Mark Attendance{% endblock %}
 
@@ -38,10 +39,10 @@
           <td>{{ student.roll_number }}</td>
           <td>{{ student.name }}</td>
           <td>
-            <input type="radio" name="present_{{ student.id }}" value="present" {% if attendance_data|get_item:student.id == 'Present' %}checked{% endif %}>
+            <input type="radio" name="status_{{ student.id }}" value="Present" {% if attendance_data|get:student.id == 'Present' %}checked{% endif %}>
           </td>
           <td>
-            <input type="radio" name="absent_{{ student.id }}" value="absent" {% if attendance_data|get_item:student.id == 'Absent' %}checked{% endif %}>
+            <input type="radio" name="status_{{ student.id }}" value="Absent" {% if attendance_data|get:student.id == 'Absent' %}checked{% endif %}>
           </td>
         </tr>
         {% endfor %}

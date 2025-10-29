@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from collections import defaultdict
@@ -23,6 +27,7 @@ def attendance_view(request):
     - Subjects as columns
     - Shows ✅ / ❌ / - for each subject on each date
     """
+    logger.info("Student attendance view accessed")
     student = None
     subjects = []
     attendance_matrix = defaultdict(dict)
@@ -31,17 +36,20 @@ def attendance_view(request):
 
     if request.method == "POST":
         roll_number = request.POST.get("roll_number", "").strip()
+        logger.info(f"Processing attendance for roll number: {roll_number}")
 
         if roll_number:
             try:
                 # Get student
                 student = Student.objects.get(roll_number=roll_number)
                 subjects = Subject.objects.filter(class_section=student.student_class).order_by('name')
+                logger.info(f"Student found: {student.name}, Subjects count: {subjects.count()}")
 
                 # Get all attendance records for the student
                 records = Attendance.objects.filter(student=student).order_by('date')
                 dates = sorted(records.values_list('date', flat=True).distinct())
                 sorted_dates = dates
+                logger.info(f"Attendance records found: {records.count()}, Dates: {len(dates)}")
 
                 # Initialize matrix with "-"
                 for dt in dates:
@@ -56,12 +64,15 @@ def attendance_view(request):
                 total_classes = records.count()
                 present_count = records.filter(status__iexact="Present").count()
                 attendance_percentage = round((present_count / total_classes) * 100, 1) if total_classes else 0
+                logger.info(f"Attendance summary: {present_count}/{total_classes} = {attendance_percentage}%")
 
                 messages.success(request, f"✅ Attendance loaded for Roll No: {roll_number}")
 
             except Student.DoesNotExist:
+                logger.error(f"Student not found with roll number: {roll_number}")
                 messages.error(request, f"❌ No student found with Roll Number {roll_number}.")
         else:
+            logger.warning("No roll number provided")
             messages.error(request, "⚠️ Please enter your roll number.")
 
     return render(request, "student/attendance.html", {

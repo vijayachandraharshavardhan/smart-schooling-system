@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -49,8 +53,10 @@ def teacher_logout(request):
 @login_required(login_url='/users/login/teacher/')
 @user_passes_test(is_teacher, login_url='/users/login/teacher/')
 def dashboard(request):
+    logger.info(f"Teacher dashboard accessed by user: {request.user.username}")
     teacher = request.user.teacher_profile
     classes = ClassSection.objects.all()
+    logger.info(f"Teacher: {teacher.name}, Classes count: {classes.count()}")
     return render(request, 'teacher/dashboard.html', {'classes': classes, 'teacher': teacher})
 
 
@@ -60,28 +66,32 @@ def dashboard(request):
 @login_required(login_url='/users/login/teacher/')
 @user_passes_test(is_teacher, login_url='/users/login/teacher/')
 def attendance(request):
+    logger.info(f"Teacher attendance accessed by user: {request.user.username}")
     teacher = request.user.teacher_profile
     subject = teacher.subject
     if not subject:
+        logger.warning(f"Teacher {teacher.name} not assigned to any subject")
         messages.warning(request, "You are not assigned to any subject yet!")
         return render(request, "teacher/attendance.html", {'teacher': teacher})
 
     students = Student.objects.filter(student_class=teacher.class_section).order_by('roll_number')
     today = timezone.localdate()
+    logger.info(f"Students count: {students.count()}, Subject: {subject.name}")
 
     # Load existing attendance
     attendance_data = {a.student_id: a.status for a in Attendance.objects.filter(
         subject=subject, date=today
     )}
+    logger.info(f"Existing attendance records: {len(attendance_data)}")
 
     if request.method == "POST":
         date_str = request.POST.get('date')
         date = timezone.datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else today
+        logger.info(f"Processing attendance for date: {date}")
 
         for student in students:
-            present = request.POST.get(f'present_{student.id}')
-            absent = request.POST.get(f'absent_{student.id}')
-            status = 'Present' if present else 'Absent' if absent else 'Absent'
+            status = request.POST.get(f'status_{student.id}', 'Absent')
+            logger.debug(f"Student {student.roll_number}: {status}")
 
             Attendance.objects.update_or_create(
                 student=student,
